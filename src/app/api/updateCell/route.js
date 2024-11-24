@@ -1,4 +1,4 @@
-// api/addRowToExcel/route.js
+// /api/updateCell/route.js
 
 import { BlobServiceClient, StorageSharedKeyCredential } from '@azure/storage-blob';
 import * as XLSX from 'xlsx';
@@ -18,8 +18,8 @@ async function streamToBuffer(readableStream) {
 
 export async function POST(req) {
   try {
-    const { taskName } = await req.json();
-    console.log(taskName);
+    const { rowIndex, cellIndex, value, cellAddress } = await req.json();
+
     // Initialize Blob Service Client
     const blobServiceClient = new BlobServiceClient(
       `https://${accountName}.blob.core.windows.net`,
@@ -33,23 +33,19 @@ export async function POST(req) {
     const buffer = await streamToBuffer(downloadBlockBlobResponse.readableStreamBody);
     const workbook = XLSX.read(buffer, { type: 'buffer' });
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-    const newRow = [taskName]//, " ", 0, " ", 0, " ", 0, "_", 0];
-    data.push(newRow);
+    // Update the specific cell in the worksheet
+    worksheet[cellAddress] = { v: value };
 
-    const newWorksheet = XLSX.utils.aoa_to_sheet(data);
-    
-    workbook.Sheets[workbook.SheetNames[0]] = newWorksheet;
+    // Convert updated workbook back to a buffer
     const updatedBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
 
     // Upload the updated file back to Blob Storage
     await blockBlobClient.upload(updatedBuffer, updatedBuffer.length, { overwrite: true });
 
-    return new Response(JSON.stringify({ message: 'Row added successfully' }), { status: 200 });
+    return new Response(JSON.stringify({ message: 'Cell updated successfully' }), { status: 200 });
   } catch (error) {
-    console.error('Failed to add row:', error);
-    return new Response(JSON.stringify({ error: 'Failed to add row' }), { status: 500 });
+    console.error('Failed to update cell:', error);
+    return new Response(JSON.stringify({ error: 'Failed to update cell' }), { status: 500 });
   }
 }
-
