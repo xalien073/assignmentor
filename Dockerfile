@@ -25,7 +25,8 @@ ENV NEW_RELIC_APP_NAME=AssignMentor \
     AZURE_STORAGE_ACCOUNT_NAME=vipernest \
     AZURE_STORAGE_ACCOUNT_KEY=5MJfM4zBaK+nF3JWd3A89qDpvHbJBdWg8WqmDr64uDI4ylwzSTJdnRAhMsdm+XnfsbAbzZxzYnoJ+AStONAk2w== \
     AZURE_STORAGE_CONTAINER_NAME=assignments \
-    FILE_NAME=assignments_report.xlsx
+    FILE_NAME=assignments_report.xlsx \
+    AZURE_STORAGE_CONNECTION_STRING='DefaultEndpointsProtocol=https;AccountName=vipernest;AccountKey=5MJfM4zBaK+nF3JWd3A89qDpvHbJBdWg8WqmDr64uDI4ylwzSTJdnRAhMsdm+XnfsbAbzZxzYnoJ+AStONAk2w==;EndpointSuffix=core.windows.net'
 
 # Copy necessary files from the build stage
 COPY --from=builder /app/.next ./.next
