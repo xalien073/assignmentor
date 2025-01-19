@@ -5,10 +5,10 @@ import { useState } from "react";
 import { SiMicrosoftazure } from "react-icons/si";
 
 export default function Navbar({ currentUser, onToggle, onLogout }) {
-  const [showMenu, setShowMenu] = useState(false);
+  // const [showMenu, setShowMenu] = useState(false);
 
   const toggleMenu = () => {
-    setShowMenu(!showMenu);
+    // setShowMenu(!showMenu);
     onToggle();
   };
 
@@ -70,7 +70,7 @@ export default function Navbar({ currentUser, onToggle, onLogout }) {
               cursor: "pointer",
             }}
           >
-            {showMenu ? "Cancel" : "Log In"}
+            Log In
           </button>
         )}
       </div>

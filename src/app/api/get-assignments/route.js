@@ -1,17 +1,32 @@
-// api/getAzureTables/route.js
+// api/get-assignments/route.js
 
 import { TableClient } from "@azure/data-tables";
 
 export async function GET(req) {
-  console.log("API Endpoint Hit: /api/getAzureTables");
+  console.log("API Endpoint Hit: /api/get-assignments");
 
   const url = new URL(req.url);
   const timestamp = url.searchParams.get("timestamp");
+  const tableName = url.searchParams.get("tableName");
 
   if (!timestamp) {
     console.error("Missing timestamp parameter.");
     return new Response(
       JSON.stringify({ error: "Missing timestamp parameter." }),
+      {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        },
+      }
+    );
+  }
+
+  if (!tableName) {
+    console.error("Missing tableName parameter.");
+    return new Response(
+      JSON.stringify({ error: "Missing tableName parameter." }),
       {
         status: 400,
         headers: {
@@ -38,26 +53,13 @@ export async function GET(req) {
     );
   }
 
-  const tableNames = ["AirForce1", "TechnoManiaks", "AzureAscendants"];
-
   try {
-    const results = await Promise.all(
-      tableNames.map(async (tableName) => {
-        const client = TableClient.fromConnectionString(connectionString, tableName);
-        const tableData = [];
+    const client = TableClient.fromConnectionString(connectionString, tableName);
+    const tableData = [];
 
-        for await (const entity of client.listEntities()) {
-          tableData.push(entity);
-        }
-
-        return { tableName, data: tableData };
-      })
-    );
-
-    const formattedResults = results.reduce((acc, { tableName, data }) => {
-      acc[tableName] = data;
-      return acc;
-    }, {});
+    for await (const entity of client.listEntities()) {
+      tableData.push(entity);
+    }
 
     // Set headers to prevent caching
     const headers = new Headers();
@@ -66,12 +68,13 @@ export async function GET(req) {
     headers.set("Pragma", "no-cache");
     headers.set("Expires", "0");
 
-    console.log(`Azure Tables data fetched at timestamp: ${timestamp}`);
-    return new Response(JSON.stringify(formattedResults), { status: 200, headers });
+    console.log(`Azure Table data fetched at timestamp: ${timestamp} for table: ${tableName}`);
+    console.log(tableData);
+    return new Response(JSON.stringify({ tableName, data: tableData }), { status: 200, headers });
   } catch (error) {
-    console.error("Error fetching data:", error.message);
+    console.error(`Error fetching data from table ${tableName}:`, error.message);
     return new Response(
-      JSON.stringify({ error: "Failed to fetch data from Azure Table Storage." }),
+      JSON.stringify({ error: `Failed to fetch data from table ${tableName}.` }),
       {
         status: 500,
         headers: {

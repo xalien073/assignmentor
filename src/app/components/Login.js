@@ -2,6 +2,12 @@
 "use client";
 import { useState } from "react";
 import { users } from "../users";
+import {
+  Button,
+  TextField,
+  Typography,
+  Box,
+} from "@mui/material";
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -21,39 +27,43 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div style={{ margin: "1em", padding: "1em", border: "1px solid #ccc" }}>
-      <h2>Login</h2>
-      <div>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={{ margin: "0.5em 0", padding: "0.5em", width: "100%" }}
-        />
-      </div>
-      <div>
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{ margin: "0.5em 0", padding: "0.5em", width: "100%" }}
-        />
-      </div>
-      <button
-        onClick={handleLogin}
-        style={{
-          padding: "0.5em 1em",
-          backgroundColor: "#0070f3",
-          color: "#fff",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-        }}
-      >
-        Log In
-      </button>
-    </div>
+    <Box
+  style={{
+    padding: "20px",
+    backgroundColor: "white",
+    borderRadius: "8px",
+    margin: "50px auto",
+    width: "400px",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
+  }}
+>
+  <Typography variant="h6" style={{ marginBottom: "20px" }}>
+    Login
+  </Typography>
+  <TextField
+    label="Email"
+    type="email"
+    fullWidth
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+    style={{ marginBottom: "10px" }}
+  />
+  <TextField
+    label="Password"
+    type="password"
+    fullWidth
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    style={{ marginBottom: "10px" }}
+  />
+  <Button
+    variant="contained"
+    color="primary"
+    onClick={handleLogin}
+    fullWidth
+  >
+    Log In
+  </Button>
+</Box>
   );
 }

@@ -8,7 +8,7 @@ export async function POST(req) {
   try {
     const rowData = await req.json(); // Parse JSON request body
 
-    const { rKey, airForce1, technoManiaks, azureAscendants } = rowData;
+    const { rKey, airForce1, technoManiaks, azureAscendants, total } = rowData;
 
     // Validate required fields
     if (!rKey) {
@@ -30,6 +30,7 @@ export async function POST(req) {
       airForce1,
       technoManiaks,
       azureAscendants,
+      total
     });
 
     return new Response(

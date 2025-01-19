@@ -1,12 +1,12 @@
 // app/page.js
 "use client";
 import { useEffect, useState } from "react";
-import Tasks from "./components/Tasks";
+// import Tasks from "./components/Tasks";
 import Navbar from "./components/Navbar";
 import { users } from "./users";
 import Login from "./components/Login";
 import AzureGrids from "./components/AzureTables";
-
+import { Modal } from "@mui/material";
 
 export default function Home() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -38,7 +38,9 @@ export default function Home() {
       }}
       >
       {/* Conditional rendering of login form */}
-      {showLogin && <Login onLogin={handleLogin} />}
+      <Modal open={showLogin} onClose={() => setShowLogin(false)}>
+        <Login onLogin={handleLogin} />
+      </Modal>
 
       <AzureGrids currentUser={currentUser} />
       

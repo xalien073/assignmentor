@@ -15,7 +15,7 @@ import {
 import { SiMicrosoftazure } from "react-icons/si";
 import Leaderboard from "./Leaderboard";
 
-const AzureGrids = (currentUser) => {
+const AzureGrids = ({ currentUser} ) => {
   const router = useRouter();
   const [quizzes, setQuizzes] = useState([]);
   const [tablesData, setTablesData] = useState({
@@ -35,6 +35,7 @@ const AzureGrids = (currentUser) => {
     airForce1: 0,
     technoManiaks: 0,
     azureAscendants: 0,
+    total: 0
   });
   const [gradeAssignment, setGradeAssignment] = useState({
     table: "",
@@ -96,12 +97,17 @@ const AzureGrids = (currentUser) => {
       const currentMonth = new Date().toLocaleString("default", {
         month: "long",
       });
+      const fullDate = new Date().toLocaleDateString("default", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
       const currentTime = new Date().toISOString();
 
       const rowData = {
         partitionKey: currentMonth,
         rowKey: currentTime,
-        title: `Quiz ${quizzes.length + 1} ${currentMonth}`,
+        title: `Quiz ${quizzes.length + 1} -  ${fullDate}`,
         airForce1: 0,
         technoManiaks: 0,
         azureAscendants: 0,
@@ -238,6 +244,7 @@ const AzureGrids = (currentUser) => {
                 airForce1: gradeQuiz.airForce1,
                 technoManiaks: gradeQuiz.technoManiaks,
                 azureAscendants: gradeQuiz.azureAscendants,
+                total: gradeQuiz.total
               }
             : item
         )
@@ -251,7 +258,8 @@ const AzureGrids = (currentUser) => {
         rKey: '',
         airForce1: 0,
         technoManiaks: 0,
-        azureAscendants: 0
+        azureAscendants: 0,
+        total: 0
       });
     }
   };
@@ -364,7 +372,7 @@ const AzureGrids = (currentUser) => {
         </Grid>
 
         {/* Table Rows */}
-        {data.map((item) => (
+        {[...data].reverse().map((item) => (
           <Grid item xs={12} key={item.title}>
             <Paper elevation={1} style={{ padding: "10px" }}>
               <Grid container>
@@ -384,6 +392,7 @@ const AzureGrids = (currentUser) => {
                   <Typography variant="body2">{item.totalScore}</Typography>
                 </Grid>
                 <Grid item xs={1}>
+                {currentUser && currentUser.isAdmin && (
                   <Button
                     variant="contained"
                     color="primary"
@@ -391,10 +400,10 @@ const AzureGrids = (currentUser) => {
                       setGradeModalOpen(true);
                       assignmentToGrade(tableName, item.title, team);
                     }}
-                    disabled={currentUser.isAdmin}
                   >
                     Grade
                   </Button>
+                )}
                 </Grid>
               </Grid>
             </Paper>
@@ -411,15 +420,16 @@ const AzureGrids = (currentUser) => {
         <Typography variant="h4" mb={2}>
           <SiMicrosoftazure style={{ fontSize: "32px" }} />
           zure Quizzes
+          {currentUser && currentUser.isAdmin && (
           <Button
             variant="contained"
             color="primary"
             onClick={() => handleQuiz()}
-            disabled={currentUser.isAdmin}
             style={{ margin: "30px", marginLeft: "900px" }}
           >
             Add Quiz
           </Button>
+          )}
         </Typography>
 
         <Grid container spacing={1}>
@@ -470,19 +480,21 @@ const AzureGrids = (currentUser) => {
                   </Grid>
 
                   <Grid item xs={3} sx={{ px: 3 }}>
-                    <Typography variant="body2">{item.airForce1}</Typography>
+                    <Typography variant="body2">{item.airForce1} / {item.total}
+                    </Typography>
                   </Grid>
                   <Grid item xs={3} sx={{ px: 3 }}>
                     <Typography variant="body2">
-                      {item.technoManiaks}
+                      {item.technoManiaks} / {item.total}
                     </Typography>
                   </Grid>
                   <Grid item xs={2} sx={{ px: 3 }}>
                     <Typography variant="body2">
-                      {item.azureAscendants}
+                      {item.azureAscendants} / {item.total}
                     </Typography>
                   </Grid>
                   <Grid item xs={2}>
+                  {currentUser && currentUser.isAdmin && (
                     <Button
                       variant="contained"
                       color="primary"
@@ -490,10 +502,10 @@ const AzureGrids = (currentUser) => {
                         setQuizModalOpen(true);
                         quizToGrade(item.rowKey);
                       }}
-                      disabled={currentUser.isAdmin}
-                    >
+                      >
                       Grade Quiz
                     </Button>
+              )}
                   </Grid>
                 </Grid>
               </Paper>
@@ -506,15 +518,16 @@ const AzureGrids = (currentUser) => {
         <SiMicrosoftazure style={{ fontSize: "32px" }} />
         zure <SiMicrosoftazure style={{ fontSize: "32px" }} />
         ssignments
+        {currentUser && currentUser.isAdmin && (
         <Button
           variant="contained"
           color="primary"
           onClick={() => setAddModalOpen(true)}
-          disabled={currentUser.isAdmin}
           style={{ margin: "30px", marginLeft: "800px" }}
         >
           Add Assignment
         </Button>
+        )}
       </Typography>
       <Box p={3}>
         {renderTeamGrid(
@@ -671,6 +684,21 @@ const AzureGrids = (currentUser) => {
           <Typography variant="h6" style={{ marginBottom: "20px" }}>
             Grade Quiz
           </Typography>
+          <TextField
+            label="Total Grades"
+            type="number"
+            fullWidth
+            value={gradeQuiz.total}
+            onChange={(e) => {
+              const value = parseInt(e.target.value, 10);
+              setGradeQuiz({
+                ...gradeQuiz,
+                total: isNaN(value) ? "" : value,
+              });
+            }}
+            style={{ marginBottom: "10px" }}
+            inputProps={{ min: 0 }} // Optional: restrict to positive integers
+          />
           <TextField
             label="Grade Air Force 1"
             type="number"
