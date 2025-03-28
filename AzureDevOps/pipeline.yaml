@@ -12,9 +12,9 @@ pool:
     - agent.name -equals JenkinsMaster
 
 variables:
-  DOCKER_IMAGE: "xalien073/tmr:$(Build.BuildId)"
+  DOCKER_IMAGE: "xalien073/assignmentor-az-do:$(Build.BuildId)"
   SONAR_URL: "http://20.44.59.222:9000"
-  GIT_REPO_NAME: "xalien073/t-t-i-meal-reviewer-next-js-v14"
+  GIT_REPO_NAME: "xalien073/assignmentor"
   GIT_USER_NAME: "xalien073"
 
 stages:
