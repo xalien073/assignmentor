@@ -8,7 +8,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /assignmentor
+          - path: /
             pathType: Prefix
             backend:
               service:
