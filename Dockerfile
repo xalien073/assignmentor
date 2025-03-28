@@ -30,7 +30,7 @@ ENV NEW_RELIC_APP_NAME=AssignMentor \
 
 # Copy necessary files from the build stage
 COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
+# COPY --from=builder /app/public ./public
 
 # Expose port and set the default command
 EXPOSE 3000
