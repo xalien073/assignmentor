@@ -25,15 +25,15 @@ export default function Navbar({ currentUser, onToggle, onLogout }) {
       }}
     >
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Link href="/assignmentor" style={{ marginRight: "1em", fontSize: "18px" }}>
+        <Link href="/" style={{ marginRight: "1em", fontSize: "18px" }}>
           <SiMicrosoftazure style={{ fontSize: "24px" }} />
           ssignMentor
         </Link>
-        <Link href="/assignmentor/about" style={{ marginRight: "1em", fontSize: "18px" }}>
+        <Link href="/about" style={{ marginRight: "1em", fontSize: "18px" }}>
           About the <SiMicrosoftazure style={{ fontSize: "24px" }} />
           ssignMentor?
         </Link>
-        <Link href="/assignmentor/credits" style={{ marginRight: "1em", fontSize: "18px" }}>
+        <Link href="/credits" style={{ marginRight: "1em", fontSize: "18px" }}>
           Credits
         </Link>
       </div>
