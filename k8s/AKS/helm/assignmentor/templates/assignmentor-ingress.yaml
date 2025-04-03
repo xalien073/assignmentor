@@ -12,7 +12,7 @@ spec:
     - host: 20.44.59.222.nip.io
       http:
         paths:
-          - path: /assignmentor
+          - path: /assignmentor(/|$)(.*)
             pathType: Prefix
             backend:
               service:
