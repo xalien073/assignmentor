@@ -37,6 +37,9 @@ export default function Home() {
         padding: "0.7em 1.3em"
       }}
       >
+        <h1>
+          Testing ingress behavior!
+        </h1>
       {/* Conditional rendering of login form */}
       <Modal open={showLogin} onClose={() => setShowLogin(false)}>
         <Login onLogin={handleLogin} />
